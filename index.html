@@ -16,7 +16,7 @@ h1{font-size:1.7rem;margin:6px 0 4px;color:var(--pink)}
 fieldset{border:1px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 16px;padding:14px 14px 6px}
 legend{font-weight:600;color:var(--pink);padding:0 8px}
 label{display:block;font-size:.85rem;margin:0 0 12px;color:var(--muted)}
-input,textarea{width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;color:var(--text);background:var(--field)}
+input,textarea,select{width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;color:var(--text);background:var(--field)}
 textarea{min-height:110px;resize:vertical}
 .row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .hint{font-size:.78rem;color:var(--muted);margin:-6px 0 12px}
@@ -61,6 +61,9 @@ button.alt{background:transparent;color:var(--pink)}
 <label>Judul kecil<input id="slabel" type="text" placeholder="untuk kamu"></label>
 <label>Teks penutup<input id="stext" type="text"></label></fieldset>
 
+<fieldset><legend>Tema</legend>
+<label>Pilih tema tampilan kado<select id="theme"><option value="Pink (asli)">Pink (asli)</option><option value="Gelap malam (navy)">Gelap malam (navy)</option><option value="Biru langit">Biru langit</option><option value="Hijau sage">Hijau sage</option><option value="Ungu lavender">Ungu lavender</option></select></label></fieldset>
+
 <fieldset><legend>Musik</legend>
 <label>Judul atau link lagu latar<input id="music" type="text"></label>
 <p class="hint">Foto, file lagu, dan pesan suara dikirim lewat chat WhatsApp setelah pesan ini terkirim. Foto potret (rasio 4:5) paling pas.</p></fieldset>
@@ -71,7 +74,7 @@ button.alt{background:transparent;color:var(--pink)}
 
 <script>
 var WA='6285776241926';
-var IDS=['to','proper','full','from','pageTitle','jdate','jlabel','pin1','pin2','wa','ltitle','lsalut','lbody','smat','reasons','slabel','stext','music'];
+var IDS=['to','proper','full','from','pageTitle','jdate','jlabel','pin1','pin2','wa','ltitle','lsalut','lbody','smat','reasons','slabel','stext','theme','music'];
 function $(i){return document.getElementById(i);}
 function v(i){return $(i).value.trim();}
 function msg(t,c){var m=$('msg');m.textContent=t;m.className=c||'';}
@@ -100,6 +103,7 @@ function build(){
     '*SURAT*',line('Judul',v('ltitle')),line('Salam',v('lsalut')),line('Foto kecil sebelum paragraf ke',v('smat')),'Isi:',$('lbody').value.trim(),'',
     '*TOPLES ALASAN*',reasons,'',
     '*KEJUTAN TERAKHIR*',line('Judul kecil',v('slabel')),line('Teks',v('stext')),'',
+    '*TEMA*',line('Tema',v('theme')),'',
     '*MUSIK*',line('Judul atau link lagu',v('music')),'',
     'Foto, file lagu, dan pesan suara saya kirim terpisah setelah ini.'].join('\n');
 }
