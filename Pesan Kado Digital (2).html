@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="id"><head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Pesan Kado Digital</title>
+<style>
+:root{--pink:#c04f7c;--text:#5a2d44;--muted:#8a5570;--bg1:#fff1f6;--bg2:#fccfe0;--card:rgba(255,255,255,.7);--field:#fff;--line:rgba(192,79,124,.32);--btn:#fff;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--pink:#f08db5;--text:#fbe4ee;--muted:#d9a3bb;--bg1:#2a1420;--bg2:#3b1b2c;--card:rgba(255,255,255,.06);--field:#1d0e16;--line:rgba(240,141,181,.35);--btn:#2a1420}}
+:root[data-theme="dark"]{--pink:#f08db5;--text:#fbe4ee;--muted:#d9a3bb;--bg1:#2a1420;--bg2:#3b1b2c;--card:rgba(255,255,255,.06);--field:#1d0e16;--line:rgba(240,141,181,.35);--btn:#2a1420}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;color:var(--text);background:var(--bg1) linear-gradient(180deg,var(--bg1),var(--bg2));min-height:100vh}
+main{max-width:640px;margin:0 auto;padding:22px 16px 60px}
+h1{font-size:1.7rem;margin:6px 0 4px;color:var(--pink)}
+.sub{color:var(--muted);margin:0 0 18px}
+fieldset{border:1px solid var(--line);border-radius:16px;background:var(--card);margin:0 0 16px;padding:14px 14px 6px}
+legend{font-weight:600;color:var(--pink);padding:0 8px}
+label{display:block;font-size:.85rem;margin:0 0 12px;color:var(--muted)}
+input,textarea{width:100%;margin-top:4px;padding:10px 12px;border:1px solid var(--line);border-radius:10px;font:inherit;color:var(--text);background:var(--field)}
+textarea{min-height:110px;resize:vertical}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.hint{font-size:.78rem;color:var(--muted);margin:-6px 0 12px}
+button{font:inherit;cursor:pointer;border-radius:999px;padding:12px 22px;border:1px solid var(--pink);background:var(--pink);color:var(--btn);font-weight:600}
+button.alt{background:transparent;color:var(--pink)}
+.acts{display:flex;gap:10px;flex-wrap:wrap;margin-top:6px}
+#msg{margin-top:14px;font-size:.9rem;min-height:1.2em}
+.err{color:#d0443a}.ok{color:#2e8b57}
+#prev{display:none;margin-top:12px;min-height:200px;font-size:.8rem}
+</style></head><body><main>
+<h1>Pesan Kado Digital</h1>
+<p class="sub">Isi form, lalu tekan kirim. WhatsApp terbuka dengan pesanan yang sudah tersusun. Foto, musik, dan pesan suara dikirim terpisah di chat itu.</p>
+
+<fieldset><legend>Nama</legend>
+<div class="row"><label>Nama panggilan penerima<input id="to" type="text" placeholder="Sayang"></label>
+<label>Nama rapi (kartu “Kamu, ...”)<input id="proper" type="text"></label></div>
+<div class="row"><label>Nama lengkap / di surat<input id="full" type="text"></label>
+<label>Tanda tangan di kartu alasan<input id="from" type="text" placeholder="aku"></label></div>
+<label>Judul halaman (juga untuk pratinjau link)<input id="pageTitle" type="text" placeholder="Untuk Sayang"></label></fieldset>
+
+<fieldset><legend>Tanggal jadian</legend>
+<div class="row"><label>Tanggal<input id="jdate" type="date"></label>
+<label>Teks label<input id="jlabel" type="text"></label></div>
+<p class="hint">Label kosong = otomatis, misalnya “sejak 1 Januari”.</p></fieldset>
+
+<fieldset><legend>PIN &amp; WhatsApp</legend>
+<div class="row"><label>PIN utama (4 angka)<input id="pin1" type="tel" inputmode="numeric" maxlength="4" placeholder="1234"></label>
+<label>PIN kedua (opsional)<input id="pin2" type="tel" inputmode="numeric" maxlength="4"></label></div>
+<label>Nomor WhatsApp penerima harapan<input id="wa" type="tel" placeholder="08xxxxxxxxxx"></label>
+<p class="hint">Kalau diisi, harapan yang ditulis penerima membuka WhatsApp ke nomor ini. Kosongkan kalau tidak perlu.</p></fieldset>
+
+<fieldset><legend>Surat</legend>
+<div class="row"><label>Judul surat<input id="ltitle" type="text" placeholder="Surat Kecil"></label>
+<label>Salam<input id="lsalut" type="text" placeholder="dariku untukmu, sayang."></label></div>
+<label>Isi surat (pisahkan paragraf dengan baris kosong)<textarea id="lbody" style="min-height:200px"></textarea></label>
+<label>Foto kecil muncul sebelum paragraf ke-<input id="smat" type="number" min="0" placeholder="3"></label></fieldset>
+
+<fieldset><legend>Toples alasan</legend>
+<label>Satu alasan per baris<textarea id="reasons"></textarea></label></fieldset>
+
+<fieldset><legend>Kejutan terakhir</legend>
+<label>Judul kecil<input id="slabel" type="text" placeholder="untuk kamu"></label>
+<label>Teks penutup<input id="stext" type="text"></label></fieldset>
+
+<fieldset><legend>Musik</legend>
+<label>Judul atau link lagu latar<input id="music" type="text"></label>
+<p class="hint">Foto, file lagu, dan pesan suara dikirim lewat chat WhatsApp setelah pesan ini terkirim. Foto potret (rasio 4:5) paling pas.</p></fieldset>
+
+<div class="acts"><button id="go" type="button">Kirim ke WhatsApp</button><button id="cp" type="button" class="alt">Salin pesan</button></div>
+<div id="msg"></div>
+<textarea id="prev" readonly></textarea>
+
+<script>
+var WA='6285776241926';
+var IDS=['to','proper','full','from','pageTitle','jdate','jlabel','pin1','pin2','wa','ltitle','lsalut','lbody','smat','reasons','slabel','stext','music'];
+function $(i){return document.getElementById(i);}
+function v(i){return $(i).value.trim();}
+function msg(t,c){var m=$('msg');m.textContent=t;m.className=c||'';}
+function save(){try{var o={};IDS.forEach(function(i){o[i]=$(i).value;});localStorage.setItem('kado-draft',JSON.stringify(o));}catch(e){}}
+function load(){try{var o=JSON.parse(localStorage.getItem('kado-draft')||'null');if(o)IDS.forEach(function(i){if(o[i]!=null)$(i).value=o[i];});}catch(e){}}
+IDS.forEach(function(i){$(i).addEventListener('input',save);});
+load();
+
+function check(){
+  if(!v('to'))return 'Isi nama panggilan penerima.';
+  if(!v('jdate'))return 'Isi tanggal jadian.';
+  var p=[v('pin1'),v('pin2')].filter(Boolean);
+  if(!p.length||p.some(function(x){return !/^\d{4}$/.test(x);}))return 'PIN harus 4 angka.';
+  if(!v('lbody'))return 'Isi surat masih kosong.';
+  if(!v('reasons'))return 'Isi minimal satu alasan.';
+  return '';
+}
+function line(k,x){return k+': '+(x||'-');}
+function build(){
+  var reasons=$('reasons').value.split('\n').map(function(x){return x.trim();}).filter(Boolean)
+    .map(function(x,i){return (i+1)+'. '+x;}).join('\n');
+  return ['*PESANAN KADO DIGITAL*','',
+    '*NAMA*',line('Panggilan penerima',v('to')),line('Nama rapi',v('proper')),line('Nama lengkap di surat',v('full')),line('Tanda tangan kartu alasan',v('from')),line('Judul halaman',v('pageTitle')),'',
+    '*TANGGAL JADIAN*',line('Tanggal',v('jdate')),line('Label',v('jlabel')||'otomatis'),'',
+    '*PIN & WHATSAPP*',line('PIN utama',v('pin1')),line('PIN kedua',v('pin2')),line('WA penerima harapan',v('wa')),'',
+    '*SURAT*',line('Judul',v('ltitle')),line('Salam',v('lsalut')),line('Foto kecil sebelum paragraf ke',v('smat')),'Isi:',$('lbody').value.trim(),'',
+    '*TOPLES ALASAN*',reasons,'',
+    '*KEJUTAN TERAKHIR*',line('Judul kecil',v('slabel')),line('Teks',v('stext')),'',
+    '*MUSIK*',line('Judul atau link lagu',v('music')),'',
+    'Foto, file lagu, dan pesan suara saya kirim terpisah setelah ini.'].join('\n');
+}
+$('go').onclick=function(){
+  var e=check();if(e)return msg(e,'err');
+  var t=build();$('prev').value=t;
+  var w=window.open('https://wa.me/'+WA+'?text='+encodeURIComponent(t),'_blank');
+  if(w){msg('WhatsApp terbuka. Tekan kirim, lalu kirim foto dan suaranya di chat yang sama.','ok');}
+  else{$('prev').style.display='block';msg('WhatsApp tidak terbuka. Tekan “Salin pesan”, lalu tempel di chat ke 0'+WA.slice(2)+'.','err');}
+};
+$('cp').onclick=function(){
+  var e=check();if(e)return msg(e,'err');
+  var t=build(),p=$('prev');p.value=t;p.style.display='block';
+  function fb(){p.select();try{document.execCommand('copy');msg('Pesan tersalin. Tempel di chat WhatsApp.','ok');}catch(x){msg('Salin manual dari kotak di bawah.','err');}}
+  if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(t).then(function(){msg('Pesan tersalin. Tempel di chat WhatsApp.','ok');},fb);}else{fb();}
+};
+</script></main></body></html>
